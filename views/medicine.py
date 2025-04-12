@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from models.model import Medicine
-from schemas.schema import MedicineCreate, MedicineOut
+from models.medicine import Medicine
+from schemas.medicine import MedicineCreate, MedicineOut
 
 def create_medicine_view(med: MedicineCreate, db: Session):
     db_med = Medicine(**med.dict())

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from database import get_db
-from schemas.schema import MedicineCreate, MedicineOut
-from views.view import (
+from schemas.medicine import MedicineCreate, MedicineOut
+from views.medicine import (
     create_medicine_view,
     read_medicines_view,
     read_medicine_view,
