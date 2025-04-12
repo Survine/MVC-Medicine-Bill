@@ -33,7 +33,7 @@ def show_tables():
 if __name__ == "__main__":
     # Uncomment what you need to run:
     
-    drop_medicine_table()
+    # drop_medicine_table()
     # delete_database()
     show_tables()
     pass
