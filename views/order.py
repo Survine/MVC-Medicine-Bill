@@ -35,21 +35,26 @@ def create_order_view(order: OrderCreate, db: Session):
 def read_orders_view(db: Session):
     return db.query(Order).all()
 
+
 def read_order_view(order_id: int, db: Session):
     order = db.query(Order).filter(Order.id == order_id).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     return order
 
-def update_order_view(order_id: int, order_update: OrderCreate, db: Session):
+
+def update_order_view(order_id: int, order_update: OrderCreate, db: Session): 
     order = db.query(Order).filter(Order.id == order_id).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     for key, value in order_update.dict().items():
+        if key == "medicines":
+            continue
         setattr(order, key, value)
     db.commit()
     db.refresh(order)
     return order
+
 
 def delete_order_view(order_id: int, db: Session):
     order = db.query(Order).filter(Order.id == order_id).first()
@@ -59,11 +64,13 @@ def delete_order_view(order_id: int, db: Session):
     db.commit()
     return {"detail": "Order deleted"}
 
+
 def read_orders_by_customer_view(customer_name: str, db: Session):
     orders = db.query(Order).filter(Order.customer_name == customer_name).all()
     if not orders:
         raise HTTPException(status_code=404, detail="No orders found for this customer")
     return orders
+
 
 def read_orders_by_medicine_view(medicine_name: str, db: Session):
     orders = db.query(Order).join(Order.medicines).filter(OrderMedicine.name == medicine_name).all()
