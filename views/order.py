@@ -2,11 +2,11 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from models.order import Order, OrderMedicine
 from schemas.order import OrderCreate
-from utils.total_price import calculate_total_price_from_db
+from utils.total_price import calculate_total_price_in_order
 
 def create_order_view(order: OrderCreate, db: Session):
     try:
-        total_price = calculate_total_price_from_db(order.medicines, db)
+        total_price = calculate_total_price_in_order(order.medicines, db)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

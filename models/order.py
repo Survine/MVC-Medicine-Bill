@@ -11,6 +11,9 @@ class Order(Base):
     address = Column(String)
     total_price = Column(Float)
 
+    # Define the relationship to OrderMedicine in 1-to-many fashion, back_populates is used to link the two classes, 
+    # cascade is set so that when an Order is deleted, all related OrderMedicines are also deleted.
+    # The delete-orphan option ensures that if an OrderMedicine is removed from the Order, it will be deleted from the database.
     medicines = relationship("OrderMedicine", back_populates="order", cascade="all, delete-orphan")
 
 

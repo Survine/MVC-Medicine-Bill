@@ -3,7 +3,7 @@ from schemas.order import MedicineItem
 from models.medicine import Medicine
 
 
-def calculate_total_price_from_db(medicines: list[MedicineItem], db: Session) -> float:
+def calculate_total_price_in_order(medicines: list[MedicineItem], db: Session) -> float:
     total = 0.0
     for item in medicines:
         db_medicine = db.query(Medicine).filter(Medicine.name == item.name).first()
