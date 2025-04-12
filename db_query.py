@@ -7,8 +7,8 @@ from models.order import Order
 # 🔥 Drop only the 'medicines' table
 def drop_medicine_table():
     print("⚠️ Dropping 'medicines' table...")
-    Medicine.__table__.drop(bind=engine)
-    Order.__table__.drop(bind=engine)  # Drop Order table as well if needed
+    # Medicine.__table__.drop(bind=engine)
+    Order.__table__.drop(bind=engine)  
     print("✅ 'medicines' table dropped.")
     print("✅ 'Order' table dropped.")
 
@@ -36,7 +36,7 @@ def show_tables():
 if __name__ == "__main__":
     # Uncomment what you need to run:
     
-    drop_medicine_table()
+    # drop_medicine_table()
     # delete_database()
     show_tables()
     pass
