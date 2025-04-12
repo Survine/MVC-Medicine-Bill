@@ -1,5 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List
+from datetime import datetime
+
 
 class MedicineItem(BaseModel):
     name: str
@@ -8,12 +10,13 @@ class MedicineItem(BaseModel):
 class OrderCreate(BaseModel):
     customer_name: str
     medicines: List[MedicineItem]
-    order_date: str
+    order_date: str = Field(default_factory=lambda: datetime.now().strftime("%d-%m-%Y"))
     address: str
-    total_price: float
+
 
 class OrderOut(OrderCreate):
     id: int
+    total_price: float
 
     class Config:
         orm_mode = True

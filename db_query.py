@@ -2,15 +2,13 @@ import os
 from sqlalchemy import inspect
 from database import engine, Base
 from models.medicine import Medicine
-from models.order import Order
+from models.order import Order, OrderMedicine
 
 # 🔥 Drop only the 'medicines' table
 def drop_medicine_table():
-    print("⚠️ Dropping 'medicines' table...")
     # Medicine.__table__.drop(bind=engine)
-    Order.__table__.drop(bind=engine)  
-    print("✅ 'medicines' table dropped.")
-    print("✅ 'Order' table dropped.")
+    Order.__table__.drop(bind=engine)
+    OrderMedicine.__table__.drop(bind=engine)
 
 # 🧨 Delete entire SQLite database file
 def delete_database():
@@ -36,7 +34,7 @@ def show_tables():
 if __name__ == "__main__":
     # Uncomment what you need to run:
     
-    # drop_medicine_table()
+    drop_medicine_table()
     # delete_database()
     show_tables()
     pass
