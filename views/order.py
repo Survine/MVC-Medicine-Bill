@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from models.order import Order, OrderMedicine
 from schemas.order import OrderCreate
 from utils.total_price import calculate_total_price_in_order
+from utils.stock_update import deduct_stock, restore_stock
+
 
 def create_order_view(order: OrderCreate, db: Session):
     try:
@@ -10,6 +12,11 @@ def create_order_view(order: OrderCreate, db: Session):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+    # Deduct stock first
+    for med in order.medicines:
+        deduct_stock(db, med.name, med.quantity)
+
+    # Then create order
     db_order = Order(
         customer_name=order.customer_name,
         order_date=order.order_date,
@@ -32,6 +39,7 @@ def create_order_view(order: OrderCreate, db: Session):
     db.refresh(db_order)
     return db_order
 
+
 def read_orders_view(db: Session):
     return db.query(Order).all()
 
@@ -43,14 +51,17 @@ def read_order_view(order_id: int, db: Session):
     return order
 
 
-def update_order_view(order_id: int, order_update: OrderCreate, db: Session): 
+def update_order_view(order_id: int, order_update: OrderCreate, db: Session):
+    # ⚠️ Optional: implement smart stock adjustment here if needed
     order = db.query(Order).filter(Order.id == order_id).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
+
     for key, value in order_update.dict().items():
         if key == "medicines":
             continue
         setattr(order, key, value)
+
     db.commit()
     db.refresh(order)
     return order
@@ -60,6 +71,11 @@ def delete_order_view(order_id: int, db: Session):
     order = db.query(Order).filter(Order.id == order_id).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
+
+    # Restore stock before deleting
+    for med in order.medicines:
+        restore_stock(db, med.name, med.quantity)
+
     db.delete(order)
     db.commit()
     return {"detail": "Order deleted"}
